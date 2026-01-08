@@ -1,127 +1,210 @@
-# TMA Tracker SDK
+# 📊 TMA Tracker SDK
 
-SDK для автоматизованого трекінгу ефективності рекламних кампаній у Telegram Mini Apps.
+**Automated tracking SDK for Telegram Mini Apps advertising campaign effectiveness**
 
-## Можливості
+Track unique users, monitor Telegram Stars payments, and get detailed analytics for your TMA advertising campaigns.
 
-- Відстеження унікальних користувачів по UTM-параметрах
-- Збір даних про платежі в Telegram Stars
-- API для отримання аналітики
-- Підтримка base64 encoded UTM параметрів
-- Безпечний доступ через API ключі
+---
 
-## Структура проекту
+## ✨ Features
+
+- 📈 **Track unique users** via UTM parameters
+- 💰 **Monitor Telegram Stars payments** automatically
+- 📊 **Analytics API** for agencies without direct database access
+- 🔐 **Secure access** via API keys
+- 🔗 **Base64 encoded UTM** support for clean links
+- 🚀 **Production-ready** with Railway deployment guide
+
+---
+
+## 🏗️ Project Structure
 
 ```
 tma-tracker-sdk/
 ├── packages/
-│   ├── client/     # Клієнтський SDK для браузера
-│   └── server/     # API сервер з Express + Prisma
+│   ├── client/     # Browser SDK (UMD, ESM, CJS)
+│   └── server/     # API Server (Express + Prisma)
 ```
 
-## Встановлення та налаштування
+**Monorepo architecture:**
+- **Client SDK**: Lightweight JavaScript library for TMA integration
+- **Server API**: Backend service for data collection and analytics
 
-### 1. Встановлення залежностей
+---
+
+## 🚀 Quick Start
+
+### For TMA Owners (Integration)
+
+If you already have a TMA bot and want to add tracking:
+
+1. **Deploy the server** → See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+2. **Integrate SDK into your TMA** → See [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)
+
+### For Developers (Local Development)
 
 ```bash
-# Встановити всі залежності для monorepo
+# 1. Install dependencies
+npm install
+
+# 2. Setup server environment
+cp packages/server/.env.example packages/server/.env
+# Edit .env with your settings
+
+# 3. Generate Prisma client
+npm run prisma:generate
+
+# 4. Run database migrations
+npm run prisma:migrate
+
+# 5. Build all packages
+npm run build
+
+# 6. Start development server
+npm run dev:server
+```
+
+---
+
+## 📦 Installation & Setup
+
+### 1. Install Dependencies
+
+```bash
+# Install all monorepo dependencies
 npm install
 ```
 
-### 2. Налаштування серверної частини
+### 2. Configure Server
 
 ```bash
-# Скопіювати приклад env файлу
+# Copy environment example
 cp packages/server/.env.example packages/server/.env
 
-# Відредагувати .env файл з вашими налаштуваннями
+# Edit .env file with your configuration
 
-# Згенерувати Prisma клієнт
+# Generate Prisma client
 npm run prisma:generate
 
-# Запустити міграції БД
+# Run database migrations
 npm run prisma:migrate
 ```
 
-### 3. Збірка
+### 3. Build
 
 ```bash
-# Зібрати всі пакети
+# Build all packages
 npm run build
 
-# Або окремо
+# Or build individually
 npm run build -w packages/client
 npm run build -w packages/server
 ```
 
-## Розробка
+---
+
+## 🛠️ Development
 
 ```bash
-# Запустити клієнтську частину в dev режимі
+# Run client in dev mode
 npm run dev:client
 
-# Запустити сервер в dev режимі
+# Run server in dev mode
 npm run dev:server
 ```
 
-## Тестування
+---
+
+## 🧪 Testing
 
 ```bash
-# Запустити всі тести
+# Run all tests
 npm test
 
-# Тести для конкретного пакету
+# Test specific package
 npm test -w packages/client
 npm test -w packages/server
 ```
 
-## Linting та форматування
+---
+
+## 🎨 Linting & Formatting
 
 ```bash
-# Перевірити код
+# Check code
 npm run lint
 
-# Виправити помилки автоматично
+# Auto-fix issues
 npm run lint:fix
 
-# Форматувати код
+# Format code
 npm run format
 
-# Перевірити форматування
+# Check formatting
 npm run format:check
 ```
 
-## 📚 Документація
+---
 
-### Для розробників:
-- **[QUICK_START.md](./QUICK_START.md)** - Швидкий старт для локальної розробки
-- **[TMA_Tracker_SDK_Technical_Specification.md](./TMA_Tracker_SDK_Technical_Specification.md)** - Технічна специфікація
+## 📚 Documentation
 
-### Для production:
-- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Покроковий план підготовки SDK до production
-- **[IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)** - Детальний гайд по імплементації SDK у ваш TMA бот
+### For Developers:
+- **[QUICK_START.md](./QUICK_START.md)** - Quick start for local development
+- **[TMA_Tracker_SDK_Technical_Specification.md](./TMA_Tracker_SDK_Technical_Specification.md)** - Technical specification
 
-### Тестування:
-- **[test-tma.html](./test-tma.html)** - Інтерактивна тестова сторінка для перевірки SDK
+### For Production:
+- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Step-by-step production deployment guide
+- **[IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)** - Detailed SDK implementation guide for your TMA bot
 
-## 🎯 Швидкий старт для вашого TMA
+### Testing:
+- **[TESTING_PLAN.md](./TESTING_PLAN.md)** - Testing strategy and plan
+- **[test-tma.html](./test-tma.html)** - Interactive test page for SDK verification
 
-Якщо у вас вже є TMA бот (наприклад, `https://t.me/playdiceebot/app`):
+---
 
-1. **Деплой серверної частини** → [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
-2. **Інтеграція SDK у ваш TMA** → [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)
+## ✅ Project Status
 
-## ✅ Статус проекту
+- ✅ Server running and tested
+- ✅ Client SDK built (UMD, ESM, CJS formats)
+- ✅ API endpoints verified
+- ✅ Database configured (SQLite)
+- ✅ API keys generated
+- ✅ `app_open` tracking working
+- ✅ Payment tracking working
+- ✅ Analytics API returning correct data
 
-- ✅ Сервер працює і протестований
-- ✅ Клієнтський SDK зібраний (UMD, ESM, CJS)
-- ✅ API endpoints перевірені
-- ✅ База даних налаштована (SQLite)
-- ✅ API ключі згенеровані
-- ✅ Трекінг `app_open` працює
-- ✅ Трекінг платежів працює
-- ✅ Analytics API повертає коректні дані
+**Status:** Production-ready ✨
 
-## Ліцензія
+---
+
+## 🔧 Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run build` | Build all packages |
+| `npm run dev:client` | Run client in dev mode |
+| `npm run dev:server` | Run server in dev mode |
+| `npm test` | Run all tests |
+| `npm run lint` | Check code quality |
+| `npm run format` | Format code |
+| `npm run prisma:generate` | Generate Prisma client |
+| `npm run prisma:migrate` | Run database migrations |
+| `npm run prisma:studio` | Open Prisma Studio |
+
+---
+
+## 📄 License
 
 MIT
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+## 📞 Support
+
+For issues and questions, please open an issue on GitHub.
