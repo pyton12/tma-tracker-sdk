@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL") // Default: "file:./prisma/dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // Tracking app opens (unique users per campaign)

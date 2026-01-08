@@ -2,10 +2,10 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "DATABASE_URL=file:./prisma/dev.db npm install && npm run build --workspace=@tma-tracker/client && npm run build --workspace=@tma-tracker/server"
+    "buildCommand": "npm install && npm run build --workspace=@tma-tracker/client && npm run build --workspace=@tma-tracker/server"
   },
   "deploy": {
-    "startCommand": "cd packages/server && DATABASE_URL=${DATABASE_URL:-file:./prisma/dev.db} npx prisma db push --accept-data-loss && node dist/index.js",
+    "startCommand": "cd packages/server && npx prisma db push --accept-data-loss && node dist/index.js",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
