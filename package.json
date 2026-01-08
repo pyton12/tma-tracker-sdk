@@ -1,0 +1,45 @@
+{
+  "name": "tma-tracker-sdk",
+  "version": "1.0.0",
+  "description": "SDK for tracking Telegram Mini Apps advertising campaigns effectiveness",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w packages/client && npm run build -w packages/server",
+    "dev:client": "npm run dev -w packages/client",
+    "dev:server": "npm run dev -w packages/server",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
+    "test": "npm run test -w packages/client && npm run test -w packages/server",
+    "prisma:generate": "npm run prisma:generate -w packages/server",
+    "prisma:migrate": "npm run prisma:migrate -w packages/server",
+    "prisma:studio": "npm run prisma:studio -w packages/server"
+  },
+  "keywords": [
+    "telegram",
+    "mini-app",
+    "tracking",
+    "analytics",
+    "utm",
+    "telegram-stars"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

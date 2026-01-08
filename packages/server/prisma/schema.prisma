@@ -1,0 +1,53 @@
+// Prisma schema for TMA Tracker
+// Using SQLite for simplicity, can be changed to PostgreSQL for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Tracking app opens (unique users per campaign)
+model AppOpen {
+  id              Int      @id @default(autoincrement())
+  utmParameter    String   @map("utm_parameter")
+  telegramUserId  BigInt   @map("telegram_user_id")
+  username        String?
+  languageCode    String?  @map("language_code")
+  timestamp       DateTime @default(now())
+
+  @@unique([utmParameter, telegramUserId])
+  @@index([utmParameter])
+  @@map("app_opens")
+}
+
+// Tracking payments
+model Payment {
+  id              Int      @id @default(autoincrement())
+  utmParameter    String   @map("utm_parameter")
+  telegramUserId  BigInt   @map("telegram_user_id")
+  amount          Int
+  paymentId       String?  @map("payment_id")
+  timestamp       DateTime @default(now())
+
+  @@index([utmParameter])
+  @@index([telegramUserId])
+  @@map("payments")
+}
+
+// API Keys management
+model ApiKey {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  type        String   // "client" or "agency"
+  name        String?  // Friendly name
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  lastUsedAt  DateTime? @map("last_used_at")
+
+  @@index([key])
+  @@map("api_keys")
+}
