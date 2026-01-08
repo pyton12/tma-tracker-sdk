@@ -1,0 +1,14 @@
+# Ignore client package - we only deploy server
+packages/client/
+
+# Documentation files
+*.md
+DEPLOYMENT_GUIDE.md
+IMPLEMENTATION_GUIDE.md
+QUICK_START.md
+TESTING_PLAN.md
+TMA_Tracker_SDK_Technical_Specification.md
+
+# Test files
+test-tma.html
+
