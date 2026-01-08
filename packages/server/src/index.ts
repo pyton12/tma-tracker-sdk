@@ -28,6 +28,41 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
+// Serve SDK for CDN usage
+import { readFileSync } from 'fs'
+import { join } from 'path'
+
+const sdkPath = join(__dirname, '../../client/dist/index.umd.js')
+let sdkContent: string | null = null
+
+app.get('/sdk/tma-tracker.min.js', (_req, res) => {
+  try {
+    if (!sdkContent) {
+      sdkContent = readFileSync(sdkPath, 'utf-8')
+    }
+    res.setHeader('Content-Type', 'application/javascript')
+    res.setHeader('Cache-Control', 'public, max-age=86400') // Cache for 24 hours
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.send(sdkContent)
+  } catch (error) {
+    res.status(404).json({ success: false, error: 'SDK not found' })
+  }
+})
+
+app.get('/sdk/tma-tracker.js', (_req, res) => {
+  try {
+    if (!sdkContent) {
+      sdkContent = readFileSync(sdkPath, 'utf-8')
+    }
+    res.setHeader('Content-Type', 'application/javascript')
+    res.setHeader('Cache-Control', 'public, max-age=86400')
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.send(sdkContent)
+  } catch (error) {
+    res.status(404).json({ success: false, error: 'SDK not found' })
+  }
+})
+
 // API routes
 app.use('/api/v1/events', eventsRouter)
 app.use('/api/v1/analytics', analyticsRouter)

@@ -4,8 +4,8 @@
 
 Перед початком переконайтесь, що:
 - ✅ Серверна частина задеплоєна (див. [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md))
-- ✅ У вас є production URL API (наприклад, `https://api.yourdomain.com`)
-- ✅ У вас є Client API Key
+- ✅ У вас є production URL API: `https://tma-trackerserver-production.up.railway.app`
+- ✅ У вас є Client API Key: `5f2fd2e61108fb4ffb2d55c13b315eb19892dc18567e37dda5021081b82e32ed`
 - ✅ Ваш TMA бот вже працює: `https://t.me/playdiceebot/app`
 
 ---
