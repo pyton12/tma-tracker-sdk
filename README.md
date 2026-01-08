@@ -13,7 +13,8 @@ Track unique users, monitor Telegram Stars payments, and get detailed analytics 
 - 📊 **Analytics API** for agencies without direct database access
 - 🔐 **Secure access** via API keys
 - 🔗 **Base64 encoded UTM** support for clean links
-- 🚀 **Production-ready** with Railway deployment guide
+- 🌐 **CDN-hosted SDK** for easy integration
+- 🚀 **Production-ready** with Railway deployment
 
 ---
 
@@ -24,22 +25,38 @@ tma-tracker-sdk/
 ├── packages/
 │   ├── client/     # Browser SDK (UMD, ESM, CJS)
 │   └── server/     # API Server (Express + Prisma)
+├── examples/       # Integration examples
+└── docs/          # Documentation
 ```
 
 **Monorepo architecture:**
-- **Client SDK**: Lightweight JavaScript library for TMA integration
+- **Client SDK**: Lightweight JavaScript library (~4KB) for TMA integration
 - **Server API**: Backend service for data collection and analytics
+- **CDN Endpoint**: Hosted SDK for easy integration
 
 ---
 
 ## 🚀 Quick Start
 
-### For TMA Owners (Integration)
+### For TMA Owners (5-minute integration)
 
-If you already have a TMA bot and want to add tracking:
+Add this to your TMA's HTML:
 
-1. **Deploy the server** → See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
-2. **Integrate SDK into your TMA** → See [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)
+```html
+<script src="https://tma-trackerserver-production.up.railway.app/sdk/tma-tracker.min.js"></script>
+<script>
+  TMATracks.init({
+    apiKey: 'YOUR_API_KEY',
+    apiEndpoint: 'https://tma-trackerserver-production.up.railway.app'
+  });
+</script>
+```
+
+**That's it!** See [FOR_TMA_OWNERS.md](./FOR_TMA_OWNERS.md) for complete guide.
+
+### For Agencies (Client onboarding)
+
+See [AGENCY_WORKFLOW.md](./AGENCY_WORKFLOW.md) for how to onboard TMA clients.
 
 ### For Developers (Local Development)
 
@@ -148,32 +165,46 @@ npm run format:check
 
 ## 📚 Documentation
 
-### For Developers:
-- **[QUICK_START.md](./QUICK_START.md)** - Quick start for local development
-- **[TMA_Tracker_SDK_Technical_Specification.md](./TMA_Tracker_SDK_Technical_Specification.md)** - Technical specification
+### 🎯 For TMA Owners:
+- **[FOR_TMA_OWNERS.md](./FOR_TMA_OWNERS.md)** - Simple integration guide (start here!)
+- **[CLIENT_INTEGRATION_GUIDE.md](./CLIENT_INTEGRATION_GUIDE.md)** - Detailed integration guide
+- **[INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md)** - Quick reference
 
-### For Production:
-- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Step-by-step production deployment guide
-- **[IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)** - Detailed SDK implementation guide for your TMA bot
+### 🏢 For Agencies:
+- **[AGENCY_WORKFLOW.md](./AGENCY_WORKFLOW.md)** - Client onboarding workflow
+- **[QUICK_START_ADMIN.md](./QUICK_START_ADMIN.md)** - Admin API usage
 
-### Testing:
-- **[TESTING_PLAN.md](./TESTING_PLAN.md)** - Testing strategy and plan
-- **[test-tma.html](./test-tma.html)** - Interactive test page for SDK verification
+### 🚀 For Deployment:
+- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Deploy to Railway/VPS
+- **[IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)** - Full implementation guide
+
+### 🛠️ For Developers:
+- **[QUICK_START.md](./QUICK_START.md)** - Local development setup
+- **[TMA_Tracker_SDK_Technical_Specification.md](./TMA_Tracker_SDK_Technical_Specification.md)** - Technical spec
+- **[TESTING_PLAN.md](./TESTING_PLAN.md)** - Testing strategy
 
 ---
 
-## ✅ Project Status
+## ✅ Production Status
 
-- ✅ Server running and tested
-- ✅ Client SDK built (UMD, ESM, CJS formats)
-- ✅ API endpoints verified
-- ✅ Database configured (SQLite)
-- ✅ API keys generated
-- ✅ `app_open` tracking working
-- ✅ Payment tracking working
-- ✅ Analytics API returning correct data
+- ✅ **Server deployed** on Railway
+- ✅ **SDK available via CDN** (`https://tma-trackerserver-production.up.railway.app/sdk/tma-tracker.min.js`)
+- ✅ **Client SDK built** (UMD, ESM, CJS formats)
+- ✅ **API endpoints verified** and working
+- ✅ **Database configured** (SQLite with Prisma)
+- ✅ **API keys generated** (Admin, Agency, Client)
+- ✅ **App open tracking** working
+- ✅ **Payment tracking** working
+- ✅ **Analytics API** returning correct data
+- ✅ **CORS enabled** for Telegram WebApp
+- ✅ **HTTPS enabled** via Railway
 
-**Status:** Production-ready ✨
+**Status:** 🚀 Production-ready and deployed!
+
+### Production URLs:
+- **API Server:** `https://tma-trackerserver-production.up.railway.app`
+- **SDK CDN:** `https://tma-trackerserver-production.up.railway.app/sdk/tma-tracker.min.js`
+- **Health Check:** `https://tma-trackerserver-production.up.railway.app/health`
 
 ---
 
