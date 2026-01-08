@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Dice - TMA Tracker Integration</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <h1>Play Dice Bot</h1>
+  <div id="status">Loading...</div>
+  
+  <!-- TMA Tracker SDK -->
+  <script src="https://tma-trackerserver-production.up.railway.app/sdk/tma-tracker.min.js"></script>
+  
+  <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    // TMA Tracker Configuration
+    const TMA_CONFIG = {
+      apiKey: 'bf23ab763305a8ca3c665d5d9806740d6eef',
+      apiEndpoint: 'https://tma-trackerserver-production.up.railway.app',
+      debug: true
+    };
+
+    // Initialize TMA Tracker (Non-blocking)
+    function initTMATracker() {
+      const statusEl = document.getElementById('status');
+      
+      // Check if SDK loaded
+      if (typeof TMATracks === 'undefined') {
+        console.warn('⚠️ TMATracks SDK not loaded yet, retrying...');
+        statusEl.textContent = 'Waiting for SDK...';
+        setTimeout(initTMATracker, 100);
+        return;
+      }
+
+      statusEl.textContent = 'Initializing tracker...';
+
+      // Fire-and-forget initialization
+      TMATracks.init(TMA_CONFIG)
+        .then(() => {
+          console.log('✅ TMA Tracker initialized');
+          const utm = TMATracks.getUtmParameter();
+          statusEl.textContent = `Tracker ready! UTM: ${utm || 'none'}`;
+        })
+        .catch(error => {
+          console.error('❌ Failed to initialize tracker:', error);
+          statusEl.textContent = 'Tracker failed to load';
+          // App continues working
+        });
+    }
+
+    // Start initialization
+    initTMATracker();
+
+    // Example: Track payment
+    async function trackPayment(amount, paymentId) {
+      try {
+        await TMATracks.trackPayment({ amount, paymentId });
+        console.log('✅ Payment tracked');
+      } catch (error) {
+        console.error('❌ Payment tracking failed:', error);
+      }
+    }
+  </script>
+</body>
+</html>
+
