@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMA Tracker SDK Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .status {
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    .info { background: #d1ecf1; color: #0c5460; }
+    pre {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 TMA Tracker SDK Test</h1>
+  
+  <div id="status" class="status info">Loading SDK...</div>
+  
+  <h2>Test Results:</h2>
+  <pre id="results"></pre>
+
+  <!-- Load SDK -->
+  <script src="/sdk/tma-tracker.min.js"></script>
+  
+  <script>
+    const statusEl = document.getElementById('status');
+    const resultsEl = document.getElementById('results');
+    const results = [];
+
+    function log(message, type = 'info') {
+      console.log(message);
+      results.push(`[${type.toUpperCase()}] ${message}`);
+      resultsEl.textContent = results.join('\n');
+    }
+
+    function runTests() {
+      // Test 1: Check if SDK loaded
+      if (typeof TMATracks === 'undefined') {
+        statusEl.className = 'status error';
+        statusEl.textContent = '❌ SDK failed to load';
+        log('TMATracks is undefined', 'error');
+        return;
+      }
+
+      log('✅ TMATracks is defined', 'success');
+      log(`TMATracks type: ${typeof TMATracks}`, 'info');
+      log(`TMATracks keys: ${Object.keys(TMATracks).join(', ')}`, 'info');
+
+      // Test 2: Check methods
+      const methods = ['init', 'trackPayment', 'getUtmParameter', 'isInitialized'];
+      methods.forEach(method => {
+        if (typeof TMATracks[method] === 'function') {
+          log(`✅ TMATracks.${method} exists`, 'success');
+        } else {
+          log(`❌ TMATracks.${method} missing`, 'error');
+        }
+      });
+
+      // Test 3: Check initialization state
+      const isInit = TMATracks.isInitialized();
+      log(`Initialized: ${isInit}`, 'info');
+
+      // Test 4: Try to initialize
+      log('Attempting to initialize...', 'info');
+      TMATracks.init({
+        apiKey: 'test-key',
+        apiEndpoint: window.location.origin,
+        debug: true
+      })
+        .then(() => {
+          statusEl.className = 'status success';
+          statusEl.textContent = '✅ SDK loaded and initialized successfully!';
+          log('✅ Initialization successful', 'success');
+          log(`UTM Parameter: ${TMATracks.getUtmParameter() || 'none'}`, 'info');
+        })
+        .catch(error => {
+          statusEl.className = 'status error';
+          statusEl.textContent = '⚠️ SDK loaded but initialization failed';
+          log(`❌ Initialization error: ${error.message}`, 'error');
+        });
+    }
+
+    // Wait for SDK to load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runTests);
+    } else {
+      runTests();
+    }
+  </script>
+</body>
+</html>
+

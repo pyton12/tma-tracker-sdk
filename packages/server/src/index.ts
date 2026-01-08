@@ -32,6 +32,9 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
+// Serve static files (test page)
+app.use(express.static(join(__dirname, '../public')))
+
 // Serve SDK for CDN usage
 const sdkPath = join(__dirname, '../../client/dist/index.umd.js')
 const sdkMapPath = join(__dirname, '../../client/dist/index.umd.js.map')
