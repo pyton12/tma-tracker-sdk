@@ -34,7 +34,9 @@ app.get('/health', (_req, res) => {
 
 // Serve SDK for CDN usage
 const sdkPath = join(__dirname, '../../client/dist/index.umd.js')
+const sdkMapPath = join(__dirname, '../../client/dist/index.umd.js.map')
 let sdkContent: string | null = null
+let sdkMapContent: string | null = null
 
 app.get('/sdk/tma-tracker.min.js', (_req, res) => {
   try {
@@ -61,6 +63,21 @@ app.get('/sdk/tma-tracker.js', (_req, res) => {
     res.send(sdkContent)
   } catch (error) {
     res.status(404).json({ success: false, error: 'SDK not found' })
+  }
+})
+
+// Serve source map for debugging
+app.get('/sdk/index.umd.js.map', (_req, res) => {
+  try {
+    if (!sdkMapContent) {
+      sdkMapContent = readFileSync(sdkMapPath, 'utf-8')
+    }
+    res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Cache-Control', 'public, max-age=86400')
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.send(sdkMapContent)
+  } catch (error) {
+    res.status(404).json({ success: false, error: 'Source map not found' })
   }
 })
 
