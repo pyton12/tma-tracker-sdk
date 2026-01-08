@@ -4,6 +4,7 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 import eventsRouter from './api/events'
 import analyticsRouter from './api/analytics'
+import adminRouter from './api/admin'
 
 // Load environment variables
 dotenv.config()
@@ -30,6 +31,7 @@ app.get('/health', (_req, res) => {
 // API routes
 app.use('/api/v1/events', eventsRouter)
 app.use('/api/v1/analytics', analyticsRouter)
+app.use('/api/v1/admin', adminRouter)
 
 // 404 handler
 app.use((_req, res) => {
@@ -54,6 +56,7 @@ app.listen(PORT, () => {
   console.log(`📊 Health check: http://localhost:${PORT}/health`)
   console.log(`📡 Events API: http://localhost:${PORT}/api/v1/events`)
   console.log(`📈 Analytics API: http://localhost:${PORT}/api/v1/analytics`)
+  console.log(`🔐 Admin API: http://localhost:${PORT}/api/v1/admin`)
 })
 
 export default app
