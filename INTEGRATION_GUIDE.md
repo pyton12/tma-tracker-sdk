@@ -25,33 +25,32 @@
     tg.ready();
     tg.expand();
 
-    // Initialize TMA Tracker
-    async function initTracker() {
-      try {
-        // Check if SDK is loaded
-        if (typeof TMATracks === 'undefined') {
-          console.error('❌ TMATracks SDK not loaded');
-          return;
-        }
-        
-        await TMATracks.init({
-          apiKey: 'YOUR_API_KEY_HERE',
-          apiEndpoint: 'https://tma-trackerserver-production.up.railway.app',
-          debug: true // Enable debug logging
-        });
-        
-        console.log('✅ TMA Tracker initialized');
-      } catch (error) {
-        console.error('❌ Failed to initialize TMA Tracker:', error);
+    // Initialize TMA Tracker (Non-blocking for fast app launch)
+    function initTracker() {
+      // Check if SDK is loaded
+      if (typeof TMATracks === 'undefined') {
+        console.warn('⚠️ TMATracks SDK not loaded, retrying...');
+        setTimeout(initTracker, 100); // Retry after 100ms
+        return;
       }
+
+      // Fire-and-forget initialization (doesn't block app)
+      TMATracks.init({
+        apiKey: 'YOUR_API_KEY_HERE',
+        apiEndpoint: 'https://tma-trackerserver-production.up.railway.app',
+        debug: true // Enable debug logging
+      })
+        .then(() => {
+          console.log('✅ TMA Tracker initialized');
+        })
+        .catch(error => {
+          console.error('❌ Failed to initialize TMA Tracker:', error);
+          // App continues working even if tracking fails
+        });
     }
 
-    // Wait for SDK to load
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initTracker);
-    } else {
-      initTracker();
-    }
+    // Start initialization immediately (non-blocking)
+    initTracker();
   </script>
 </body>
 </html>
@@ -73,17 +72,46 @@ async function handlePayment(amount, paymentId) {
 }
 ```
 
+## Performance Optimization
+
+### 🚀 Fast App Launch (Recommended)
+
+**Don't block app launch waiting for tracker:**
+
+```javascript
+// ❌ BAD - Blocks app launch
+async function init() {
+  await initTracker(); // Waits for tracker
+  showApp(); // App shows only after tracker is ready
+}
+
+// ✅ GOOD - Non-blocking
+function init() {
+  initTracker(); // Runs in background
+  showApp(); // App shows immediately
+}
+```
+
+### Key optimizations:
+
+1. **Use `defer`** on script tag - doesn't block HTML parsing
+2. **Fire-and-forget** - Don't `await` tracker initialization
+3. **Retry logic** - Auto-retry if SDK not loaded yet
+4. **Graceful degradation** - App works even if tracking fails
+
 ## Important Notes
 
 ### ✅ DO:
 - Load SDK script **before** calling `TMATracks.init()`
 - Check `typeof TMATracks !== 'undefined'` before using
-- Use `async/await` for `init()` and `trackPayment()`
+- Use **fire-and-forget** pattern for non-blocking init
 - Enable `debug: true` during development
+- Use `defer` attribute on script tag
 
 ### ❌ DON'T:
 - Don't call `window.TMATracks` - use `TMATracks` directly
-- Don't call `init()` before SDK loads
+- Don't `await` tracker init in app startup flow
+- Don't block app launch waiting for tracker
 - Don't forget to replace `YOUR_API_KEY_HERE`
 
 ## Testing

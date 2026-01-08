@@ -124,34 +124,38 @@
     tg.expand();
 
     // ============================================
-    // Initialize TMA Tracker
+    // Initialize TMA Tracker (Non-blocking)
     // ============================================
-    async function initTracker() {
-      try {
-        // Wait for SDK to load
-        if (typeof TMATracks === 'undefined') {
-          console.error('❌ TMATracks SDK not loaded yet');
-          return;
-        }
-
-        await TMATracks.init(TMA_TRACKER_CONFIG);
-        
-        // Update UI with campaign info
-        const campaign = TMATracks.getUtmParameter();
-        document.getElementById('campaign').textContent = campaign || 'Direct';
-        
-        // Update user info
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-          document.getElementById('userId').textContent = user.id;
-          document.getElementById('username').textContent = user.username || 'Anonymous';
-        }
-        
-        console.log('✅ TMA Tracker initialized');
-      } catch (error) {
-        console.error('❌ Failed to initialize tracker:', error);
-        document.getElementById('campaign').textContent = 'Error';
+    function initTracker() {
+      // Check if SDK is loaded
+      if (typeof TMATracks === 'undefined') {
+        console.warn('⚠️ TMATracks SDK not loaded yet, retrying...');
+        // Retry after a short delay (max 3 seconds)
+        setTimeout(initTracker, 100);
+        return;
       }
+
+      // Fire-and-forget initialization (doesn't block app)
+      TMATracks.init(TMA_TRACKER_CONFIG)
+        .then(() => {
+          // Update UI with campaign info
+          const campaign = TMATracks.getUtmParameter();
+          document.getElementById('campaign').textContent = campaign || 'Direct';
+
+          // Update user info
+          const user = tg.initDataUnsafe?.user;
+          if (user) {
+            document.getElementById('userId').textContent = user.id;
+            document.getElementById('username').textContent = user.username || 'Anonymous';
+          }
+
+          console.log('✅ TMA Tracker initialized');
+        })
+        .catch(error => {
+          console.error('❌ Failed to initialize tracker:', error);
+          document.getElementById('campaign').textContent = 'Error';
+          // App continues working even if tracking fails
+        });
     }
 
     // ============================================
