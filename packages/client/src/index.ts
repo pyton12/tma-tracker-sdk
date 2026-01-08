@@ -12,7 +12,7 @@ const trackerInstance = new TMATracker()
 /**
  * TMA Tracks SDK interface
  */
-export const TMATracks = {
+const TMATracks = {
   /**
    * Initialize the SDK
    * @param config - Configuration options
@@ -40,5 +40,5 @@ export const TMATracks = {
 export type { TMATracksConfig, PaymentParams }
 export type { AppOpenEvent, PaymentEvent, ApiResponse, TelegramWebAppUser } from './types'
 
-// Default export for UMD build
+// Default export for UMD build (will be available as window.TMATracks)
 export default TMATracks

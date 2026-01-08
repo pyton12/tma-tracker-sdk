@@ -24,6 +24,7 @@ export default {
       format: 'umd',
       name: 'TMATracks',
       sourcemap: true,
+      exports: 'default',
       globals: {
         '@telegram-apps/sdk': 'TelegramWebApp',
       },
