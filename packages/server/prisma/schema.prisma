@@ -1,12 +1,12 @@
 // Prisma schema for TMA Tracker
-// Using SQLite for simplicity, can be changed to PostgreSQL for production
+// Using PostgreSQL for production deployment
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
