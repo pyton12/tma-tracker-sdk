@@ -2,25 +2,26 @@
 
 ## What is this?
 
-TMA Tracker helps you track which marketing campaigns bring users and revenue to your Telegram Mini App.
+TMA Tracker is a simple SDK that tracks user activity in your Telegram Mini App.
 
-**What you get:**
-- ✅ Track app opens per campaign
-- ✅ Track payments per campaign  
-- ✅ See conversion rates
-- ✅ Measure ROI for each marketing channel
+**What it does:**
+- ✅ Automatically tracks when users open your app
+- ✅ Tracks payments when users buy something
+- ✅ Sends data to your analytics agency
+
+**What you need to do:**
+- ✅ Add 2 lines of code to your TMA
+- ✅ Call one function when user pays
+
+That's it! Your agency handles everything else.
 
 ---
 
 ## 🚀 Integration (5 minutes)
 
-### Step 1: Get your API key
+### Step 1: Add SDK to your TMA
 
-Contact your analytics agency to get your unique API key.
-
-### Step 2: Add SDK to your TMA
-
-Add these 2 lines to your HTML file (before closing `</body>` tag):
+Your agency provided you with an **API key**. Add these 2 lines to your HTML file (before closing `</body>` tag):
 
 ```html
 <!-- TMA Tracker SDK -->
@@ -33,9 +34,9 @@ Add these 2 lines to your HTML file (before closing `</body>` tag):
 </script>
 ```
 
-**That's it!** App opens are now tracked automatically.
+**That's it!** App opens are now tracked automatically. ✅
 
-### Step 3: Track payments (optional)
+### Step 2: Track payments (optional)
 
 When user completes a payment, add this:
 
@@ -48,87 +49,22 @@ await TMATracks.trackPayment({
 
 ---
 
-## 📊 How to use campaigns
+## ✅ What Happens Next
 
-### Create campaign links
+Once integrated:
 
-Instead of sharing:
-```
-https://t.me/YOUR_BOT/app
-```
+1. **SDK tracks automatically** - App opens are sent to your agency
+2. **Agency creates campaign links** - They'll give you special links for different marketing channels
+3. **You get reports** - Your agency provides analytics and insights
+4. **You optimize** - Focus on channels that bring the best results
 
-Share campaign-specific links:
-```
-https://t.me/YOUR_BOT/app?startapp=instagram_story
-https://t.me/YOUR_BOT/app?startapp=youtube_video
-https://t.me/YOUR_BOT/app?startapp=telegram_channel
-```
+**You don't need to:**
+- ❌ Manage campaigns yourself
+- ❌ Access analytics directly
+- ❌ Generate tracking links
+- ❌ Understand the technical details
 
-### Track results
-
-Ask your agency for analytics, or use the API:
-
-```bash
-curl -X POST https://tma-trackerserver-production.up.railway.app/api/v1/analytics \
-  -H "x-api-key: YOUR_ANALYTICS_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"utm_parameters": ["instagram_story", "youtube_video"]}'
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "utm_parameter": "instagram_story",
-      "unique_users": 1523,
-      "paying_users": 87,
-      "total_revenue_stars": 12400,
-      "conversion_rate": 5.71
-    },
-    {
-      "utm_parameter": "youtube_video",
-      "unique_users": 892,
-      "paying_users": 34,
-      "total_revenue_stars": 5100,
-      "conversion_rate": 3.81
-    }
-  ]
-}
-```
-
----
-
-## 💡 Use Cases
-
-### 1. Test different influencers
-
-```
-https://t.me/YOUR_BOT/app?startapp=influencer_john
-https://t.me/YOUR_BOT/app?startapp=influencer_mary
-```
-
-See which influencer brings more paying users.
-
-### 2. Test different ad platforms
-
-```
-https://t.me/YOUR_BOT/app?startapp=facebook_ads
-https://t.me/YOUR_BOT/app?startapp=google_ads
-https://t.me/YOUR_BOT/app?startapp=tiktok_ads
-```
-
-Compare ROI across platforms.
-
-### 3. Test different creatives
-
-```
-https://t.me/YOUR_BOT/app?startapp=video_ad_v1
-https://t.me/YOUR_BOT/app?startapp=video_ad_v2
-```
-
-A/B test your marketing materials.
+Your agency handles all of that! 🎯
 
 ---
 
@@ -230,23 +166,23 @@ function MyApp({ Component, pageProps }) {
 
 ## ❓ FAQ
 
-**Q: Does this slow down my app?**  
-A: No. SDK is ~4KB and loads asynchronously.
+**Q: Does this slow down my app?**
+A: No. SDK is ~4KB and loads asynchronously. No impact on performance.
 
-**Q: What data is collected?**  
-A: Only: Telegram User ID, campaign name, and payment amounts. No personal data.
+**Q: What data is collected?**
+A: Only: Telegram User ID (anonymous), and payment amounts. No personal data.
 
-**Q: Is it GDPR compliant?**  
+**Q: Is it GDPR compliant?**
 A: Yes. Minimal data collection, no cookies, no personal information.
 
-**Q: Can I self-host?**  
-A: Yes! See `DEPLOYMENT_GUIDE.md` for instructions.
+**Q: Do I need to manage campaigns?**
+A: No. Your agency creates and manages all campaign links for you.
 
-**Q: How much does it cost?**  
-A: Contact your analytics agency for pricing.
+**Q: How do I see analytics?**
+A: Your agency provides reports. You don't need direct access.
 
-**Q: Can I see the source code?**  
-A: Yes! It's open source: https://github.com/pyton12/tma-tracker-sdk
+**Q: What if I have issues?**
+A: Contact your agency support team.
 
 ---
 
@@ -262,9 +198,13 @@ A: Yes! It's open source: https://github.com/pyton12/tma-tracker-sdk
 
 ## 📞 Support
 
-- **Documentation:** https://github.com/pyton12/tma-tracker-sdk
-- **Issues:** https://github.com/pyton12/tma-tracker-sdk/issues
-- **Agency Support:** Contact your analytics provider
+**Need help?** Contact your analytics agency.
+
+They will help you with:
+- Integration issues
+- Testing and verification
+- Payment tracking setup
+- Any technical questions
 
 ---
 
@@ -273,12 +213,12 @@ A: Yes! It's open source: https://github.com/pyton12/tma-tracker-sdk
 Before going live:
 
 - [ ] SDK script tag added to HTML
-- [ ] API key configured
-- [ ] Tested with at least 2 different campaigns
-- [ ] Payment tracking implemented (if applicable)
-- [ ] Verified data appears in analytics
+- [ ] API key configured (provided by agency)
+- [ ] Payment tracking implemented (if you have payments)
+- [ ] Tested in Telegram (open your TMA and check console)
+- [ ] Notified your agency that integration is complete
 
 ---
 
-**Ready to track your campaigns? Add the SDK and start measuring! 🚀**
+**That's all you need to do! Your agency will handle the rest. 🚀**
 
