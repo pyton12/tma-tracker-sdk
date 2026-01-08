@@ -3,14 +3,12 @@ nixPkgs = ['nodejs_18', 'openssl']
 
 [phases.install]
 cmds = [
-  'npm install --workspace=packages/server',
-  'cd packages/server && npm install'
+  'npm install'
 ]
 
 [phases.build]
 cmds = [
-  'cd packages/server && npx prisma generate',
-  'cd packages/server && npm run build'
+  'npm run build --workspace=@tma-tracker/server'
 ]
 
 [start]
