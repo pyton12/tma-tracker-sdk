@@ -104,8 +104,8 @@
   </div>
 
   <!-- TMA Tracker SDK from CDN -->
-  <script src="https://tma-trackerserver-production.up.railway.app/sdk/tma-tracker.min.js"></script>
-  
+  <script src="https://tma-trackerserver-production.up.railway.app/sdk/tma-tracker.min.js" async defer></script>
+
   <script>
     // ============================================
     // CONFIGURATION - Replace with your API key
@@ -128,6 +128,12 @@
     // ============================================
     async function initTracker() {
       try {
+        // Wait for SDK to load
+        if (typeof TMATracks === 'undefined') {
+          console.error('❌ TMATracks SDK not loaded yet');
+          return;
+        }
+
         await TMATracks.init(TMA_TRACKER_CONFIG);
         
         // Update UI with campaign info
@@ -189,7 +195,18 @@
     // ============================================
     // Initialize on page load
     // ============================================
-    initTracker();
+    // Wait for both DOM and SDK to load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTracker);
+    } else {
+      // DOM already loaded, check if SDK is ready
+      if (typeof TMATracks !== 'undefined') {
+        initTracker();
+      } else {
+        // Wait a bit for SDK to load
+        setTimeout(initTracker, 100);
+      }
+    }
   </script>
 </body>
 </html>
