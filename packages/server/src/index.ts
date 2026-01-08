@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 import eventsRouter from './api/events'
 import analyticsRouter from './api/analytics'
 import adminRouter from './api/admin'
@@ -13,7 +15,9 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 // Middleware
-app.use(helmet())
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}))
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN || '*',
@@ -29,9 +33,6 @@ app.get('/health', (_req, res) => {
 })
 
 // Serve SDK for CDN usage
-import { readFileSync } from 'fs'
-import { join } from 'path'
-
 const sdkPath = join(__dirname, '../../client/dist/index.umd.js')
 let sdkContent: string | null = null
 
