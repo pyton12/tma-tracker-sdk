@@ -22,10 +22,21 @@
     "mini-app",
     "tracking",
     "analytics",
-    "browser"
+    "browser",
+    "utm",
+    "tma"
   ],
-  "author": "",
+  "author": "pyton12",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pyton12/tma-tracker-sdk.git",
+    "directory": "packages/client"
+  },
+  "homepage": "https://github.com/pyton12/tma-tracker-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/pyton12/tma-tracker-sdk/issues"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
