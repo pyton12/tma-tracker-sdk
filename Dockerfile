@@ -1,8 +1,8 @@
 # Use Node.js 18
 FROM node:18-alpine
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl
+# Install OpenSSL and other dependencies for Prisma
+RUN apk add --no-cache openssl openssl-dev libc6-compat
 
 # Set working directory
 WORKDIR /app
@@ -17,6 +17,9 @@ RUN npm install
 
 # Copy source code
 COPY . .
+
+# Generate Prisma Client
+RUN cd packages/server && npx prisma generate
 
 # Build client and server
 RUN npm run build -w packages/client
