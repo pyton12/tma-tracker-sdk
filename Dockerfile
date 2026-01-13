@@ -12,13 +12,16 @@ COPY package*.json ./
 COPY packages/client/package*.json ./packages/client/
 COPY packages/server/package*.json ./packages/server/
 
-# Install dependencies
+# Copy Prisma schema first (needed for prisma generate during install)
+COPY packages/server/prisma ./packages/server/prisma
+
+# Install dependencies (this will run prisma generate as postinstall)
 RUN npm install
 
 # Copy source code
 COPY . .
 
-# Generate Prisma Client
+# Regenerate Prisma Client to ensure compatibility with current system
 RUN cd packages/server && npx prisma generate
 
 # Build client and server
