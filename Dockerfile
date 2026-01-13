@@ -1,8 +1,8 @@
-# Use Node.js 18
-FROM node:18-alpine
+# Use Node.js 18 (Debian-based for better Prisma compatibility)
+FROM node:18-slim
 
 # Install OpenSSL and other dependencies for Prisma
-RUN apk add --no-cache openssl openssl-dev libc6-compat
+RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
