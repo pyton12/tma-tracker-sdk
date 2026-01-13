@@ -1,6 +1,3 @@
-# Ignore client package - we only deploy server
-packages/client/
-
 # Documentation files
 *.md
 DEPLOYMENT_GUIDE.md
