@@ -4,6 +4,9 @@ FROM node:18-slim
 # Install OpenSSL and other dependencies for Prisma
 RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
+# Set Prisma binary target for Debian
+ENV PRISMA_CLI_BINARY_TARGETS="debian-openssl-3.0.x"
+
 # Set working directory
 WORKDIR /app
 
@@ -21,8 +24,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Regenerate Prisma Client to ensure compatibility with current system
-RUN cd packages/server && npx prisma generate
+# Force regenerate Prisma Client for debian-openssl-3.0.x
+RUN rm -rf node_modules/.prisma node_modules/@prisma/client
+RUN cd packages/server && npx prisma generate --generator client
 
 # Build client and server
 RUN npm run build -w packages/client
