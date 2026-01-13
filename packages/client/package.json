@@ -1,5 +1,5 @@
 {
-  "name": "@tma-tracker/client",
+  "name": "tma-tracker-sdk",
   "version": "1.0.0",
   "type": "module",
   "description": "Client SDK for TMA Tracker - tracking Telegram Mini Apps analytics",

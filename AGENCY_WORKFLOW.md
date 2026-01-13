@@ -6,11 +6,27 @@ This guide explains how to onboard new TMA clients and provide them with trackin
 
 ---
 
+## 🔑 How Client ID Works
+
+Each client gets a **unique Client ID** that is embedded in their API key. This allows:
+
+1. **Data Isolation:** Multiple clients can use the same UTM parameter names (e.g., "campaign_111") without data mixing
+2. **Automatic Filtering:** When client sends events, their `client_id` is automatically extracted from API key
+3. **Analytics Separation:** Agency can request analytics for specific clients using `client_id` parameter
+
+**Example:**
+- Client A (clientId: "playdice") has campaign "promo_2024"
+- Client B (clientId: "cryptogame") has campaign "promo_2024"
+- Both campaigns are tracked separately in the database
+- Analytics requests must specify `client_id` to get correct data
+
+---
+
 ## 📋 Onboarding Process
 
 ### Step 1: Generate API Key for New Client
 
-When a new client wants to integrate tracking, generate a unique API key:
+When a new client wants to integrate tracking, generate a unique API key with a **unique client_id**:
 
 ```bash
 curl -X POST https://tma-trackerserver-production.up.railway.app/api/v1/admin/keys/generate \
@@ -18,9 +34,15 @@ curl -X POST https://tma-trackerserver-production.up.railway.app/api/v1/admin/ke
   -H "Content-Type: application/json" \
   -d '{
     "type": "client",
-    "name": "Client Name - TMA Bot Name"
+    "clientId": "playdice",
+    "name": "Play Dice - TMA Bot"
   }'
 ```
+
+**Important:**
+- `clientId` must be **unique** for each client (e.g., "playdice", "cryptogame", "nftapp")
+- This allows multiple clients to use the same UTM parameter names (e.g., "campaign_111") without data mixing
+- Use lowercase, no spaces (e.g., "my-client" or "myclient")
 
 **Response:**
 ```json
@@ -30,7 +52,8 @@ curl -X POST https://tma-trackerserver-production.up.railway.app/api/v1/admin/ke
     "id": 3,
     "key": "abc123def456...",
     "type": "client",
-    "name": "Client Name - TMA Bot Name",
+    "clientId": "playdice",
+    "name": "Play Dice - TMA Bot",
     "active": true,
     "createdAt": "2026-01-08T18:00:00.000Z"
   }
@@ -98,12 +121,17 @@ After client integrates, test their setup:
    curl -X POST https://tma-trackerserver-production.up.railway.app/api/v1/analytics \
      -H "x-api-key: 32b52648554665f51f92b6f49dc6bade9e72e6d4351eb9fd9445403d4002118c" \
      -H "Content-Type: application/json" \
-     -d '{"utm_parameters": ["test_campaign"]}'
+     -d '{
+       "client_id": "playdice",
+       "utm_parameters": ["test_campaign"]
+     }'
    ```
 
 2. **Verify data is coming in:**
    - Check if `unique_users` > 0
    - Check if events are being tracked
+
+**Important:** Always specify `client_id` when requesting analytics to filter data for specific client.
 
 ---
 
@@ -118,7 +146,10 @@ Provide them with analytics endpoint:
 curl -X POST https://tma-trackerserver-production.up.railway.app/api/v1/analytics \
   -H "x-api-key: THEIR_AGENCY_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"utm_parameters": ["campaign_1", "campaign_2"]}'
+  -d '{
+    "client_id": "playdice",
+    "utm_parameters": ["campaign_1", "campaign_2"]
+  }'
 ```
 
 **Option B: Dashboard (recommended)**
@@ -157,9 +188,12 @@ curl -X POST https://tma-trackerserver-production.up.railway.app/api/v1/admin/ke
   -H "Content-Type: application/json" \
   -d '{
     "type": "agency",
-    "name": "Client Name - Analytics Access"
+    "clientId": "playdice",
+    "name": "Play Dice - Analytics Access"
   }'
 ```
+
+**Note:** Agency keys can access analytics for their specific `client_id` only.
 
 ---
 

@@ -3,6 +3,7 @@ import { prisma } from '../db/client'
 
 export interface AuthRequest extends Request {
   apiKeyType?: 'client' | 'agency'
+  clientId?: string
 }
 
 /**
@@ -43,8 +44,9 @@ export async function validateApiKey(
       data: { lastUsedAt: new Date() },
     })
 
-    // Store API key type in request
+    // Store API key type and client ID in request
     req.apiKeyType = apiKeyRecord.type as 'client' | 'agency'
+    req.clientId = apiKeyRecord.clientId
 
     next()
   } catch (error) {

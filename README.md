@@ -52,7 +52,7 @@ Add this to your TMA's HTML:
 </script>
 ```
 
-**That's it!** See [FOR_TMA_OWNERS.md](./FOR_TMA_OWNERS.md) for complete guide.
+**That's it!** See [TMA_INTEGRATION_GUIDE.md](./TMA_INTEGRATION_GUIDE.md) for complete guide.
 
 ### For Agencies (Client onboarding)
 
@@ -166,21 +166,15 @@ npm run format:check
 ## 📚 Documentation
 
 ### 🎯 For TMA Owners:
-- **[FOR_TMA_OWNERS.md](./FOR_TMA_OWNERS.md)** - Simple integration guide (start here!)
-- **[CLIENT_INTEGRATION_GUIDE.md](./CLIENT_INTEGRATION_GUIDE.md)** - Detailed integration guide
-- **[INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md)** - Quick reference
+- **[TMA_INTEGRATION_GUIDE.md](./TMA_INTEGRATION_GUIDE.md)** - Complete integration guide (start here!)
 
 ### 🏢 For Agencies:
 - **[AGENCY_WORKFLOW.md](./AGENCY_WORKFLOW.md)** - Client onboarding workflow
-- **[QUICK_START_ADMIN.md](./QUICK_START_ADMIN.md)** - Admin API usage
 
 ### 🚀 For Deployment:
 - **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Deploy to Railway/VPS
-- **[IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)** - Full implementation guide
 
 ### 🛠️ For Developers:
-- **[QUICK_START.md](./QUICK_START.md)** - Local development setup
-- **[TMA_Tracker_SDK_Technical_Specification.md](./TMA_Tracker_SDK_Technical_Specification.md)** - Technical spec
 - **[TESTING_PLAN.md](./TESTING_PLAN.md)** - Testing strategy
 
 ---

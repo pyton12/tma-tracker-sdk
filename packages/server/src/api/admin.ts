@@ -34,6 +34,7 @@ function validateAdminSecret(req: any, res: any, next: any): void {
 // Validation schemas
 const generateKeySchema = z.object({
   type: z.enum(['client', 'agency']),
+  clientId: z.string().min(1).max(100), // Required client ID
   name: z.string().min(1).max(100).optional(),
 })
 
@@ -58,13 +59,14 @@ router.post('/keys/generate', validateAdminSecret, async (req, res) => {
       return
     }
 
-    const { type, name } = result.data
+    const { type, clientId, name } = result.data
     const newKey = generateApiKey()
 
     const apiKey = await prisma.apiKey.create({
       data: {
         key: newKey,
         type,
+        clientId,
         name: name || `${type.charAt(0).toUpperCase() + type.slice(1)} Key`,
         active: true,
       },
@@ -76,6 +78,7 @@ router.post('/keys/generate', validateAdminSecret, async (req, res) => {
         id: apiKey.id,
         key: apiKey.key,
         type: apiKey.type,
+        clientId: apiKey.clientId,
         name: apiKey.name,
         active: apiKey.active,
         createdAt: apiKey.createdAt,
@@ -104,6 +107,7 @@ router.get('/keys/list', validateAdminSecret, async (_req, res) => {
       id: key.id,
       key: `${key.key.substring(0, 8)}...${key.key.substring(key.key.length - 8)}`, // Show only first and last 8 chars
       type: key.type,
+      clientId: key.clientId,
       name: key.name,
       active: key.active,
       createdAt: key.createdAt,

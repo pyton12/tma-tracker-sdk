@@ -8,6 +8,7 @@ const router = Router()
 
 // Validation schema
 const analyticsRequestSchema = z.object({
+  client_id: z.string().min(1),
   utm_parameters: z.array(z.string().min(1)).min(1).max(100),
 })
 
@@ -29,20 +30,26 @@ router.post('/', validateApiKey, requireAgencyKey, analyticsRateLimiter, async (
       return
     }
 
-    const { utm_parameters } = result.data
+    const { client_id, utm_parameters } = result.data
 
-    // Get analytics for each UTM parameter
+    // Get analytics for each UTM parameter filtered by client_id
     const analyticsData = await Promise.all(
       utm_parameters.map(async utmParameter => {
-        // Count unique users
-        const uniqueUsers = await prisma.appOpen.count({
-          where: { utmParameter },
+        // Count unique users by FIRST UTM parameter and client_id
+        const uniqueUsers = await prisma.user.count({
+          where: {
+            clientId: client_id,
+            firstUtmParameter: utmParameter
+          },
         })
 
-        // Get payment statistics
+        // Get payment statistics (payments are already attributed to first UTM)
         const paymentStats = await prisma.payment.groupBy({
           by: ['utmParameter'],
-          where: { utmParameter },
+          where: {
+            clientId: client_id,
+            utmParameter
+          },
           _count: {
             telegramUserId: true,
           },
@@ -51,9 +58,12 @@ router.post('/', validateApiKey, requireAgencyKey, analyticsRateLimiter, async (
           },
         })
 
-        // Count unique paying users
+        // Count unique paying users for this client
         const payingUsers = await prisma.payment.findMany({
-          where: { utmParameter },
+          where: {
+            clientId: client_id,
+            utmParameter
+          },
           distinct: ['telegramUserId'],
           select: { telegramUserId: true },
         })

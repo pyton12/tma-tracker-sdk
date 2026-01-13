@@ -6,20 +6,39 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+// Users table - stores FIRST UTM parameter for attribution
+model User {
+  id                 Int      @id @default(autoincrement())
+  clientId           String   @map("client_id")
+  telegramUserId     BigInt   @map("telegram_user_id")
+  firstUtmParameter  String   @map("first_utm_parameter")
+  username           String?
+  languageCode       String?  @map("language_code")
+  firstSeenAt        DateTime @default(now()) @map("first_seen_at")
+  lastSeenAt         DateTime @default(now()) @map("last_seen_at")
+
+  @@unique([clientId, telegramUserId])
+  @@index([clientId])
+  @@index([firstUtmParameter])
+  @@map("users")
 }
 
 // Tracking app opens (unique users per campaign)
 model AppOpen {
   id              Int      @id @default(autoincrement())
+  clientId        String   @map("client_id")
   utmParameter    String   @map("utm_parameter")
   telegramUserId  BigInt   @map("telegram_user_id")
   username        String?
   languageCode    String?  @map("language_code")
   timestamp       DateTime @default(now())
 
-  @@unique([utmParameter, telegramUserId])
+  @@unique([clientId, utmParameter, telegramUserId])
+  @@index([clientId])
   @@index([utmParameter])
   @@map("app_opens")
 }
@@ -27,12 +46,14 @@ model AppOpen {
 // Tracking payments
 model Payment {
   id              Int      @id @default(autoincrement())
+  clientId        String   @map("client_id")
   utmParameter    String   @map("utm_parameter")
   telegramUserId  BigInt   @map("telegram_user_id")
   amount          Int
   paymentId       String?  @map("payment_id")
   timestamp       DateTime @default(now())
 
+  @@index([clientId])
   @@index([utmParameter])
   @@index([telegramUserId])
   @@map("payments")
@@ -43,11 +64,13 @@ model ApiKey {
   id          Int      @id @default(autoincrement())
   key         String   @unique
   type        String   // "client" or "agency"
+  clientId    String   @map("client_id") // Unique identifier for each client
   name        String?  // Friendly name
   active      Boolean  @default(true)
   createdAt   DateTime @default(now()) @map("created_at")
   lastUsedAt  DateTime? @map("last_used_at")
 
   @@index([key])
+  @@index([clientId])
   @@map("api_keys")
 }

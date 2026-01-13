@@ -21,13 +21,15 @@ async function generateKeys() {
       data: {
         key: clientKey,
         type: 'client',
+        clientId: 'playdice', // Default client ID
         name: 'Default Client Key',
         active: true,
       },
     })
 
     console.log('✅ Client API Key generated:')
-    console.log(`   ${clientKey}\n`)
+    console.log(`   ${clientKey}`)
+    console.log(`   Client ID: playdice\n`)
 
     // Generate agency API key
     const agencyKey = generateApiKey()
@@ -35,13 +37,15 @@ async function generateKeys() {
       data: {
         key: agencyKey,
         type: 'agency',
+        clientId: 'agency', // Agency has special client ID
         name: 'Default Agency Key',
         active: true,
       },
     })
 
     console.log('✅ Agency API Key generated:')
-    console.log(`   ${agencyKey}\n`)
+    console.log(`   ${agencyKey}`)
+    console.log(`   Client ID: agency\n`)
 
     console.log('💡 Add these keys to your .env file:')
     console.log(`   CLIENT_API_KEY=${clientKey}`)

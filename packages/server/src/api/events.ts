@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { z } from 'zod'
 import { prisma } from '../db/client'
-import { validateApiKey, requireClientKey } from '../middleware/auth'
+import { validateApiKey, requireClientKey, AuthRequest } from '../middleware/auth'
 import { eventsRateLimiter } from '../middleware/rateLimit'
 
 const router = Router()
@@ -30,8 +30,18 @@ const eventSchema = z.object({
  * POST /api/v1/events
  * Receive tracking events from client SDK
  */
-router.post('/', validateApiKey, requireClientKey, eventsRateLimiter, async (req, res) => {
+router.post('/', validateApiKey, requireClientKey, eventsRateLimiter, async (req: AuthRequest, res) => {
   try {
+    // Get client ID from auth middleware
+    const clientId = req.clientId
+    if (!clientId) {
+      res.status(500).json({
+        success: false,
+        error: 'Client ID not found',
+      })
+      return
+    }
+
     // Validate request body
     const result = eventSchema.safeParse(req.body)
 
@@ -59,9 +69,47 @@ router.post('/', validateApiKey, requireClientKey, eventsRateLimiter, async (req
       }
       const appOpenData = appOpenValidation.data
 
+      // Check if user exists for this client
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          clientId_telegramUserId: {
+            clientId,
+            telegramUserId: BigInt(appOpenData.telegramUserId)
+          }
+        },
+      })
+
+      if (!existingUser) {
+        // New user - create with FIRST UTM parameter
+        await prisma.user.create({
+          data: {
+            clientId,
+            telegramUserId: BigInt(appOpenData.telegramUserId),
+            firstUtmParameter: appOpenData.utmParameter,
+            username: appOpenData.username,
+            languageCode: appOpenData.languageCode,
+            firstSeenAt: new Date(),
+            lastSeenAt: new Date(),
+          },
+        })
+      } else {
+        // Existing user - just update lastSeenAt
+        await prisma.user.update({
+          where: {
+            clientId_telegramUserId: {
+              clientId,
+              telegramUserId: BigInt(appOpenData.telegramUserId)
+            }
+          },
+          data: { lastSeenAt: new Date() },
+        })
+      }
+
+      // Track app open (for campaign-specific stats)
       await prisma.appOpen.upsert({
         where: {
-          utmParameter_telegramUserId: {
+          clientId_utmParameter_telegramUserId: {
+            clientId,
             utmParameter: appOpenData.utmParameter,
             telegramUserId: BigInt(appOpenData.telegramUserId),
           },
@@ -70,6 +118,7 @@ router.post('/', validateApiKey, requireClientKey, eventsRateLimiter, async (req
           timestamp: new Date(),
         },
         create: {
+          clientId,
           utmParameter: appOpenData.utmParameter,
           telegramUserId: BigInt(appOpenData.telegramUserId),
           username: appOpenData.username,
@@ -96,9 +145,29 @@ router.post('/', validateApiKey, requireClientKey, eventsRateLimiter, async (req
       const paymentData = paymentValidation.data
       console.log('Payment data received:', JSON.stringify(paymentData, null, 2))
 
+      // Get user to find FIRST UTM parameter for this client
+      const user = await prisma.user.findUnique({
+        where: {
+          clientId_telegramUserId: {
+            clientId,
+            telegramUserId: BigInt(paymentData.telegramUserId)
+          }
+        },
+      })
+
+      if (!user) {
+        res.status(400).json({
+          success: false,
+          error: 'User not found. User must open app before making payment.',
+        })
+        return
+      }
+
+      // Create payment with FIRST UTM parameter (not current one)
       await prisma.payment.create({
         data: {
-          utmParameter: paymentData.utmParameter,
+          clientId,
+          utmParameter: user.firstUtmParameter, // ← Use FIRST UTM!
           telegramUserId: BigInt(paymentData.telegramUserId),
           amount: paymentData.amount,
           paymentId: paymentData.paymentId,
